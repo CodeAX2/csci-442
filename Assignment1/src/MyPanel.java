@@ -1,20 +1,17 @@
 
-import java.awt.*;
-import java.awt.event.*;
+import java.awt.Color;
+import java.awt.Graphics;
+import java.awt.Graphics2D;
 import java.awt.image.BufferedImage;
-import javax.swing.*;
-
+import javax.swing.JPanel;
 
 public class MyPanel extends JPanel {
-
-	int startX, flag, startY, endX, endY;
 
 	BufferedImage grid;
 	Graphics2D gc;
 
 	public MyPanel() {
-		startX = startY = 0;
-		endX = endY = 100;
+		setBackground(Color.BLACK);
 	}
 
 	public void clear() {
@@ -29,12 +26,29 @@ public class MyPanel extends JPanel {
 			int h = this.getHeight();
 			grid = (BufferedImage)(this.createImage(w, h));
 			gc = grid.createGraphics();
+			gc.setBackground(Color.BLACK);
+			gc.clearRect(0, 0, w, h);
 		}
 		g2.drawImage(grid, null, 0, 0);
 	}
-	public void drawing() {
 
-		gc.drawLine(startX, startY, endX, endY);
-		repaint();
+	public void drawHistogram(Color color, int[] histogram) {
+		gc.setColor(color);
+
+		float maxValue = 0;
+
+		for (int i = 0; i < histogram.length; i++) {
+			if (histogram[i] > maxValue)
+				maxValue = histogram[i];
+		}
+
+		for (int i = 0; i < histogram.length; i++) {
+			gc.drawLine(
+				i,
+				getHeight(),
+				i,
+				getHeight() - (int)(histogram[i] / maxValue * getHeight() / 2f)
+			);
+		}
 	}
 }

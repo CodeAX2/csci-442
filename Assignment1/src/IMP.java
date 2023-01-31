@@ -18,6 +18,7 @@ import java.awt.image.MemoryImageSource;
 import java.awt.image.PixelGrabber;
 import java.io.File;
 import java.util.prefs.Preferences;
+import javax.swing.BoxLayout;
 import javax.swing.ImageIcon;
 import javax.swing.JButton;
 import javax.swing.JFileChooser;
@@ -49,6 +50,8 @@ class IMP implements MouseListener {
 
 	// your 2D array of pixels
 	int picture[][];
+
+	MyPanel redPanel, greenPanel, bluePanel;
 
 	/**
 	 * In the Constructor I set up the GUI, the frame the menus. The open
@@ -104,7 +107,7 @@ class IMP implements MouseListener {
 		start.addActionListener(new ActionListener() {
 			@Override
 			public void actionPerformed(ActionEvent evt) {
-				fun1();
+				drawHistograms();
 			}
 		});
 		butPanel.add(start);
@@ -166,6 +169,15 @@ class IMP implements MouseListener {
 			}
 		});
 		fun.add(fifthItem);
+
+		JMenuItem sixthItem = new JMenuItem("Open Histogram Windows");
+		sixthItem.addActionListener(new ActionListener() {
+			@Override
+			public void actionPerformed(ActionEvent evt) {
+				openHistograms();
+			}
+		});
+		fun.add(sixthItem);
 
 		return fun;
 	}
@@ -458,6 +470,57 @@ class IMP implements MouseListener {
 		}
 		picture = newPicture;
 		resetPicture();
+	}
+
+	/**
+	 * Opens windows to view the histogram of the image
+	 */
+	private void openHistograms() {
+		JFrame histogramFrame = new JFrame("Histograms");
+		histogramFrame.setSize(915, 600);
+		histogramFrame.setLocation(600, 0);
+		histogramFrame.addWindowListener(new WindowAdapter() {
+			@Override
+			public void windowClosing(WindowEvent ev) {
+				start.setEnabled(false);
+			}
+		});
+
+		JPanel container = new JPanel();
+		container.setLayout(new BoxLayout(container, BoxLayout.X_AXIS));
+
+		redPanel = new MyPanel();
+		container.add(redPanel);
+
+		greenPanel = new MyPanel();
+		container.add(greenPanel);
+
+		bluePanel = new MyPanel();
+		container.add(bluePanel);
+
+		histogramFrame.getContentPane().add(container);
+		histogramFrame.setVisible(true);
+
+		start.setEnabled(true);
+	}
+
+	private void drawHistograms() {
+		int[] red = new int[256];
+		int[] green = new int[256];
+		int[] blue = new int[256];
+		for (int i = 0; i < pixels.length; i++) {
+			int[] curPixelData = getPixelArray(pixels[i]);
+			red[curPixelData[1]]++;
+			green[curPixelData[2]]++;
+			blue[curPixelData[3]]++;
+		}
+		redPanel.drawHistogram(Color.RED, red);
+		greenPanel.drawHistogram(Color.GREEN, green);
+		bluePanel.drawHistogram(Color.BLUE, blue);
+
+		redPanel.repaint();
+		greenPanel.repaint();
+		bluePanel.repaint();
 	}
 
 	private void quit() {

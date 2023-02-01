@@ -1,0 +1,16 @@
+BasedOnStyle: Microsoft
+BreakBeforeBraces: Attach
+UseTab: Always
+TabWidth: 4
+IndentWidth: 4
+AllowShortBlocksOnASingleLine: Empty
+AllowShortFunctionsOnASingleLine: Empty
+PointerAlignment: Left
+ReferenceAlignment: Left
+BinPackArguments: false
+BinPackParameters: false
+AllowAllArgumentsOnNextLine: true
+AllowAllParametersOfDeclarationOnNextLine: true
+AlignAfterOpenBracket: BlockIndent
+ColumnLimit: 70
+LambdaBodyIndentation: OuterScope

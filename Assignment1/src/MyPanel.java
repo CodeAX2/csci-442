@@ -33,6 +33,7 @@ public class MyPanel extends JPanel {
 	}
 
 	public void drawHistogram(Color color, int[] histogram) {
+		gc.clearRect(0, 0, getWidth(), getHeight());
 		gc.setColor(color);
 
 		float maxValue = 0;

@@ -1,7 +1,7 @@
 /*
  *Hunter Lloyd
- * Copyrite.......I wrote, ask permission if you want to use it outside of
- *class.
+ * Copyrite.......I wrote, ask permission if you want to use it
+ *outside of class.
  */
 
 import java.awt.BorderLayout;
@@ -54,8 +54,8 @@ class IMP implements MouseListener {
 	MyPanel redPanel, greenPanel, bluePanel;
 
 	/**
-	 * In the Constructor I set up the GUI, the frame the menus. The open
-	 * pulldown menu is how you will open an image to manipulate.
+	 * In the Constructor I set up the GUI, the frame the menus. The
+	 * open pulldown menu is how you will open an image to manipulate.
 	 */
 	IMP() {
 		toolkit = Toolkit.getDefaultToolkit();
@@ -117,15 +117,17 @@ class IMP implements MouseListener {
 	}
 
 	/**
-	 * This method creates the pulldown menu and sets up listeners to selection
-	 * of the menu choices. If the listeners are activated they call the methods
-	 * for handling the choice, fun1, fun2, fun3, fun4, etc. etc.
+	 * This method creates the pulldown menu and sets up listeners to
+	 * selection of the menu choices. If the listeners are activated
+	 * they call the methods for handling the choice, fun1, fun2,
+	 * fun3, fun4, etc. etc.
 	 */
 
 	private JMenu getFunctions() {
 		JMenu fun = new JMenu("Functions");
 
-		JMenuItem firstItem = new JMenuItem("MyExample - fun1 method");
+		JMenuItem firstItem =
+			new JMenuItem("MyExample - fun1 method");
 		firstItem.addActionListener(new ActionListener() {
 			@Override
 			public void actionPerformed(ActionEvent evt) {
@@ -179,13 +181,22 @@ class IMP implements MouseListener {
 		});
 		fun.add(sixthItem);
 
+		JMenuItem seventhItem = new JMenuItem("Equalize Histogram");
+		seventhItem.addActionListener(new ActionListener() {
+			@Override
+			public void actionPerformed(ActionEvent evt) {
+				histogramEQ();
+			}
+		});
+		fun.add(seventhItem);
+
 		return fun;
 	}
 
 	/**
-	 * This method handles opening an image file, breaking down the picture to a
-	 * one-dimensional array and then drawing the image on the frame.
-	 * You don't need to worry about this method.
+	 * This method handles opening an image file, breaking down the
+	 * picture to a one-dimensional array and then drawing the image
+	 * on the frame. You don't need to worry about this method.
 	 */
 	private void handleOpen() {
 		img = new ImageIcon();
@@ -214,8 +225,9 @@ class IMP implements MouseListener {
 
 		Image image = img.getImage();
 
-		PixelGrabber pg =
-			new PixelGrabber(image, 0, 0, width, height, pixels, 0, width);
+		PixelGrabber pg = new PixelGrabber(
+			image, 0, 0, width, height, pixels, 0, width
+		);
 		try {
 			pg.grabPixels();
 		} catch (InterruptedException e) {
@@ -232,9 +244,10 @@ class IMP implements MouseListener {
 	}
 
 	/**
-	 * The libraries in Java give a one dimensional array of RGB values for an
-	 * image, I thought a 2-Dimensional array would be more usefull to you
-	 * So this method changes the one dimensional array to a two-dimensional.
+	 * The libraries in Java give a one dimensional array of RGB
+	 * values for an image, I thought a 2-Dimensional array would be
+	 * more usefull to you So this method changes the one dimensional
+	 * array to a two-dimensional.
 	 */
 	private void turnTwoDimensional() {
 		picture = new int[height][width];
@@ -284,8 +297,9 @@ class IMP implements MouseListener {
 	}
 
 	/**
-	 * This method takes a single integer value and breaks it down doing bit
-	 * manipulation to 4 individual int values for A, R, G, and B values
+	 * This method takes a single integer value and breaks it down
+	 * doing bit manipulation to 4 individual int values for A, R, G,
+	 * and B values
 	 */
 	private int[] getPixelArray(int pixel) {
 		int temp[] = new int[4];
@@ -297,12 +311,13 @@ class IMP implements MouseListener {
 	}
 
 	/**
-	 * This method takes an array of size 4 and combines the first 8 bits of
-	 * each to create one integer.
+	 * This method takes an array of size 4 and combines the first 8
+	 * bits of each to create one integer.
 	 */
 	private int getPixels(int rgb[]) {
 		int alpha = 0;
-		int rgba = (rgb[0] << 24) | (rgb[1] << 16) | (rgb[2] << 8) | rgb[3];
+		int rgba =
+			(rgb[0] << 24) | (rgb[1] << 16) | (rgb[2] << 8) | rgb[3];
 		return rgba;
 	}
 
@@ -310,30 +325,31 @@ class IMP implements MouseListener {
 		int pix = picture[colorY][colorX];
 		int temp[] = getPixelArray(pix);
 		System.out.println(
-			"Color value " + temp[0] + " " + temp[1] + " " + temp[2] + " " +
-			temp[3]
+			"Color value " + temp[0] + " " + temp[1] + " " + temp[2] +
+			" " + temp[3]
 		);
 	}
 
 	/**************************************************************************************************
-	 * This is where you will put your methods. Every method below is called
-	 *when the corresponding pulldown menu is used. As long as you have a
-	 *picture open first the when your fun1, fun2, fun....etc method is called
-	 *you will have a 2D array called picture that is holding each pixel from
-	 *your picture.
+	 * This is where you will put your methods. Every method below is
+	 *called when the corresponding pulldown menu is used. As long as
+	 *you have a picture open first the when your fun1, fun2,
+	 *fun....etc method is called you will have a 2D array called
+	 *picture that is holding each pixel from your picture.
 	 *************************************************************************************************/
 	/**
-	 * Example function that just removes all red values from the picture.
-	 * Each pixel value in picture[i][j] holds an integer value. You need to
-	 * send that pixel to getPixelArray the method which will return a 4 element
-	 * array that holds A,R,G,B values. Ignore [0], that's the Alpha channel
-	 * which is transparency, we won't be using that, but you can on your own.
-	 * getPixelArray will breaks down your single int to 4 ints so you can
+	 * Example function that just removes all red values from the
+	 * picture. Each pixel value in picture[i][j] holds an integer
+	 * value. You need to send that pixel to getPixelArray the method
+	 * which will return a 4 element array that holds A,R,G,B values.
+	 * Ignore [0], that's the Alpha channel which is transparency, we
+	 * won't be using that, but you can on your own. getPixelArray
+	 * will breaks down your single int to 4 ints so you can
 	 * manipulate the values for each level of R, G, B.
-	 * After you make changes and do your calculations to your pixel values the
-	 * getPixels method will put the 4 values in your ARGB array back into a
-	 * single integer value so you can give it back to the program and display
-	 * the new picture.
+	 * After you make changes and do your calculations to your pixel
+	 * values the getPixels method will put the 4 values in your ARGB
+	 * array back into a single integer value so you can give it back
+	 * to the program and display the new picture.
 	 */
 	private void fun1() {
 
@@ -345,8 +361,8 @@ class IMP implements MouseListener {
 				rgbArray = getPixelArray(picture[i][j]);
 
 				rgbArray[1] = 0;
-				// take three ints for R, G, B and put them back into a single
-				// int
+				// take three ints for R, G, B and put them back into
+				// a single int
 				picture[i][j] = getPixels(rgbArray);
 			}
 		resetPicture();
@@ -383,8 +399,8 @@ class IMP implements MouseListener {
 		for (int row = 0; row < height; row++) {
 			for (int col = 0; col < width; col++) {
 				int[] argb = getPixelArray(picture[row][col]);
-				int val =
-					(int)(0.21 * argb[1] + 0.72 * argb[2] + 0.07 * argb[3]);
+				int val = (int
+				)(0.21 * argb[1] + 0.72 * argb[2] + 0.07 * argb[3]);
 				argb[1] = val;
 				argb[2] = val;
 				argb[3] = val;
@@ -407,8 +423,10 @@ class IMP implements MouseListener {
 				float numSummed = 0;
 				for (int offsetX = -1; offsetX <= 1; offsetX++) {
 					for (int offsetY = -1; offsetY <= 1; offsetY++) {
-						if (row + offsetY >= 0 && row + offsetY < height &&
-							col + offsetX >= 0 && col + offsetX < width) {
+						if (row + offsetY >= 0 &&
+							row + offsetY < height &&
+							col + offsetX >= 0 &&
+							col + offsetX < width) {
 							total += getPixelArray(
 								picture[row + offsetY][col + offsetX]
 							)[1];
@@ -417,8 +435,8 @@ class IMP implements MouseListener {
 					}
 				}
 				int average = (int)(total / numSummed);
-				newPicture[row][col] =
-					getPixels(new int[] {255, average, average, average});
+				newPicture[row][col] = getPixels(new int[] {
+					255, average, average, average});
 			}
 		}
 		picture = newPicture;
@@ -426,7 +444,8 @@ class IMP implements MouseListener {
 	}
 
 	/**
-	 * Turns the image grayscale and performs edge detection using a 5x5 mask
+	 * Turns the image grayscale and performs edge detection using a
+	 * 5x5 mask
 	 */
 	private void edgeDetection() {
 		makeGrayscale();
@@ -444,16 +463,20 @@ class IMP implements MouseListener {
 				int newValue = 0;
 
 				for (int maskY = 0; maskY < mask.length; maskY++) {
-					for (int maskX = 0; maskX < mask[maskY].length; maskX++) {
+					for (int maskX = 0; maskX < mask[maskY].length;
+						 maskX++) {
 						int offsetY = -(mask.length / 2) + maskY;
-						int offsetX = -(mask[maskY].length / 2) + maskX;
+						int offsetX =
+							-(mask[maskY].length / 2) + maskX;
 
-						if (row + offsetY >= 0 && row + offsetY < height &&
-							col + offsetX >= 0 && col + offsetX < width) {
+						if (row + offsetY >= 0 &&
+							row + offsetY < height &&
+							col + offsetX >= 0 &&
+							col + offsetX < width) {
 							newValue +=
 								mask[maskY][maskX] *
-								getPixelArray(
-									picture[row + offsetY][col + offsetX]
+								getPixelArray(picture[row + offsetY]
+													 [col + offsetX]
 								)[1];
 						}
 					}
@@ -464,8 +487,8 @@ class IMP implements MouseListener {
 				if (newValue >= 50)
 					newValue = 255;
 
-				newPicture[row][col] =
-					getPixels(new int[] {255, newValue, newValue, newValue});
+				newPicture[row][col] = getPixels(new int[] {
+					255, newValue, newValue, newValue});
 			}
 		}
 		picture = newPicture;
@@ -487,7 +510,8 @@ class IMP implements MouseListener {
 		});
 
 		JPanel container = new JPanel();
-		container.setLayout(new BoxLayout(container, BoxLayout.X_AXIS));
+		container.setLayout(new BoxLayout(container, BoxLayout.X_AXIS)
+		);
 
 		redPanel = new MyPanel();
 		container.add(redPanel);
@@ -521,6 +545,47 @@ class IMP implements MouseListener {
 		redPanel.repaint();
 		greenPanel.repaint();
 		bluePanel.repaint();
+	}
+
+	private void histogramEQ() {
+		// Get the R,G,B histograms
+		int[] red = new int[256];
+		int[] green = new int[256];
+		int[] blue = new int[256];
+		for (int i = 0; i < pixels.length; i++) {
+			int[] curPixelData = getPixelArray(pixels[i]);
+			red[curPixelData[1]]++;
+			green[curPixelData[2]]++;
+			blue[curPixelData[3]]++;
+		}
+
+		int totalPixels = width * height;
+		int[] newRed = generateCumulative(red, totalPixels);
+		int[] newGreen = generateCumulative(green, totalPixels);
+		int[] newBlue = generateCumulative(blue, totalPixels);
+
+		for (int row = 0; row < height; row++) {
+			for (int col = 0; col < width; col++) {
+				int pixel = picture[row][col];
+				int[] pixelColors = getPixelArray(pixel);
+				pixelColors[1] = newRed[pixelColors[1]];
+				pixelColors[2] = newGreen[pixelColors[2]];
+				pixelColors[3] = newBlue[pixelColors[3]];
+				picture[row][col] = getPixels(pixelColors);
+			}
+		}
+		resetPicture();
+	}
+
+	private int[] generateCumulative(int[] colArr, int totalPixels) {
+		int[] cumulativeValues = new int[colArr.length];
+		float total = 0;
+		for (int i = 0; i < colArr.length; i++) {
+			total += colArr[i];
+			cumulativeValues[i] =
+				Math.round(total / totalPixels * colArr.length);
+		}
+		return cumulativeValues;
 	}
 
 	private void quit() {

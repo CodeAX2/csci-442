@@ -136,6 +136,7 @@ class IMP implements MouseListener {
 		});
 		fun.add(firstItem);
 
+		// Add 90-degree roatation button
 		JMenuItem secondItem = new JMenuItem("Rotate 90");
 		secondItem.addActionListener(new ActionListener() {
 			@Override
@@ -145,6 +146,7 @@ class IMP implements MouseListener {
 		});
 		fun.add(secondItem);
 
+		// Add grayscale button
 		JMenuItem thirdItem = new JMenuItem("Make Grayscale");
 		thirdItem.addActionListener(new ActionListener() {
 			@Override
@@ -154,6 +156,7 @@ class IMP implements MouseListener {
 		});
 		fun.add(thirdItem);
 
+		// Add grayscale and blur button
 		JMenuItem fourthItem = new JMenuItem("Grayscale Blur");
 		fourthItem.addActionListener(new ActionListener() {
 			@Override
@@ -163,6 +166,7 @@ class IMP implements MouseListener {
 		});
 		fun.add(fourthItem);
 
+		// Add edge mask button
 		JMenuItem fifthItem = new JMenuItem("Edge Mask");
 		fifthItem.addActionListener(new ActionListener() {
 			@Override
@@ -172,7 +176,8 @@ class IMP implements MouseListener {
 		});
 		fun.add(fifthItem);
 
-		JMenuItem sixthItem = new JMenuItem("Open Histogram Windows");
+		// Add histrogram window button
+		JMenuItem sixthItem = new JMenuItem("Open Histogram Window");
 		sixthItem.addActionListener(new ActionListener() {
 			@Override
 			public void actionPerformed(ActionEvent evt) {
@@ -181,6 +186,7 @@ class IMP implements MouseListener {
 		});
 		fun.add(sixthItem);
 
+		// Add histogram equalization button
 		JMenuItem seventhItem = new JMenuItem("Equalize Histogram");
 		seventhItem.addActionListener(new ActionListener() {
 			@Override
@@ -380,14 +386,17 @@ class IMP implements MouseListener {
 
 		int[][] newPicture = new int[height][width];
 
+		// Loop over each pixel
 		for (int row = 0; row < oldHeight; row++) {
 			for (int col = 0; col < oldWidth; col++) {
+				// Map the old row/col to new row/col
 				int mappedRow = height - col - 1;
 				int mappedCol = row;
 				newPicture[mappedRow][mappedCol] = picture[row][col];
 			}
 		}
 
+		// Update the picture
 		picture = newPicture;
 		resetPicture();
 	}
@@ -396,11 +405,14 @@ class IMP implements MouseListener {
 	 * Turns the image to grayscale using the luminosity algorithm
 	 */
 	private void makeGrayscale() {
+		// Loop over each pixel
 		for (int row = 0; row < height; row++) {
 			for (int col = 0; col < width; col++) {
+				// Get argb array
 				int[] argb = getPixelArray(picture[row][col]);
-				int val = (int
-				)(0.21 * argb[1] + 0.72 * argb[2] + 0.07 * argb[3]);
+				// Calculate the value
+				int val = (int)(0.21 * argb[1] + 0.72 * argb[2] + 0.07 * argb[3]);
+				// Update the picture
 				argb[1] = val;
 				argb[2] = val;
 				argb[3] = val;
@@ -414,15 +426,21 @@ class IMP implements MouseListener {
 	 * Turns the image to grayscale and performs a basic blur
 	 */
 	private void grayscaleBlur() {
+		// Make the image grayscale
 		makeGrayscale();
 
+		// Save pixels to a new array
 		int[][] newPicture = new int[height][width];
+		// Loop over each pixel
 		for (int row = 0; row < height; row++) {
 			for (int col = 0; col < width; col++) {
+
+				// Generate a total based on all 9 pixels
 				float total = 0;
 				float numSummed = 0;
 				for (int offsetX = -1; offsetX <= 1; offsetX++) {
 					for (int offsetY = -1; offsetY <= 1; offsetY++) {
+						// Check the pixel is within bounds
 						if (row + offsetY >= 0 &&
 							row + offsetY < height &&
 							col + offsetX >= 0 &&
@@ -434,11 +452,13 @@ class IMP implements MouseListener {
 						}
 					}
 				}
+				// Calculate average
 				int average = (int)(total / numSummed);
 				newPicture[row][col] = getPixels(new int[] {
 					255, average, average, average});
 			}
 		}
+		// Update picture
 		picture = newPicture;
 		resetPicture();
 	}
@@ -448,8 +468,10 @@ class IMP implements MouseListener {
 	 * 5x5 mask
 	 */
 	private void edgeDetection() {
+		// Make the image grayscale
 		makeGrayscale();
 
+		// Use the 5x5 maks
 		int[][] mask = {
 			{-1, -1, -1, -1, -1},
 			{-1, 0, 0, 0, -1},
@@ -457,31 +479,38 @@ class IMP implements MouseListener {
 			{-1, 0, 0, 0, -1},
 			{-1, -1, -1, -1, -1}};
 
+		// Create a new picture array
 		int[][] newPicture = new int[height][width];
+
+		// Loop over each pixel
 		for (int row = 0; row < height; row++) {
 			for (int col = 0; col < width; col++) {
+
+				// Calculate the new value for the pixel
 				int newValue = 0;
 
+				// Loop over each spot of the mask
 				for (int maskY = 0; maskY < mask.length; maskY++) {
-					for (int maskX = 0; maskX < mask[maskY].length;
-						 maskX++) {
+					for (int maskX = 0; maskX < mask[maskY].length; maskX++) {
+						// Generate the offsets
 						int offsetY = -(mask.length / 2) + maskY;
 						int offsetX =
 							-(mask[maskY].length / 2) + maskX;
 
+						// Check the offset is in the bounds
 						if (row + offsetY >= 0 &&
 							row + offsetY < height &&
 							col + offsetX >= 0 &&
 							col + offsetX < width) {
+							// Calculate value based on the mask 
 							newValue +=
 								mask[maskY][maskX] *
-								getPixelArray(picture[row + offsetY]
-													 [col + offsetX]
-								)[1];
+								getPixelArray(picture[row + offsetY][col + offsetX])[1];
 						}
 					}
 				}
 
+				// Anthing below 50 goes to black, above 50 goes to white
 				if (newValue < 50)
 					newValue = 0;
 				if (newValue >= 50)
@@ -491,6 +520,8 @@ class IMP implements MouseListener {
 					255, newValue, newValue, newValue});
 			}
 		}
+
+		// Update the picture
 		picture = newPicture;
 		resetPicture();
 	}
@@ -499,6 +530,7 @@ class IMP implements MouseListener {
 	 * Opens windows to view the histogram of the image
 	 */
 	private void openHistograms() {
+		// Create the histogram frame
 		JFrame histogramFrame = new JFrame("Histograms");
 		histogramFrame.setSize(915, 600);
 		histogramFrame.setLocation(600, 0);
@@ -509,10 +541,12 @@ class IMP implements MouseListener {
 			}
 		});
 
+		// Create a container to contain all 3 histogram panels
 		JPanel container = new JPanel();
 		container.setLayout(new BoxLayout(container, BoxLayout.X_AXIS)
 		);
 
+		// Create the histogram panels
 		redPanel = new MyPanel();
 		container.add(redPanel);
 
@@ -525,19 +559,26 @@ class IMP implements MouseListener {
 		histogramFrame.getContentPane().add(container);
 		histogramFrame.setVisible(true);
 
+		// Enable the start button
 		start.setEnabled(true);
 	}
 
+	/**
+	 * Draws the histograms to the histogram panels
+	 */
 	private void drawHistograms() {
+		// Create arrays for the histograms
 		int[] red = new int[256];
 		int[] green = new int[256];
 		int[] blue = new int[256];
+		// Increment array values
 		for (int i = 0; i < pixels.length; i++) {
 			int[] curPixelData = getPixelArray(pixels[i]);
 			red[curPixelData[1]]++;
 			green[curPixelData[2]]++;
 			blue[curPixelData[3]]++;
 		}
+		// Draw the histograms
 		redPanel.drawHistogram(Color.RED, red);
 		greenPanel.drawHistogram(Color.GREEN, green);
 		bluePanel.drawHistogram(Color.BLUE, blue);
@@ -547,6 +588,9 @@ class IMP implements MouseListener {
 		bluePanel.repaint();
 	}
 
+	/**
+	 * Equalizes the image based on its histogram
+	 */
 	private void histogramEQ() {
 		// Get the R,G,B histograms
 		int[] red = new int[256];
@@ -559,11 +603,13 @@ class IMP implements MouseListener {
 			blue[curPixelData[3]]++;
 		}
 
+		// Generate the new rgb value mappings
 		int totalPixels = width * height;
 		int[] newRed = generateCumulative(red, totalPixels);
 		int[] newGreen = generateCumulative(green, totalPixels);
 		int[] newBlue = generateCumulative(blue, totalPixels);
 
+		// Update the pixels based on the mappings
 		for (int row = 0; row < height; row++) {
 			for (int col = 0; col < width; col++) {
 				int pixel = picture[row][col];
@@ -577,13 +623,20 @@ class IMP implements MouseListener {
 		resetPicture();
 	}
 
+	/**
+	 * Generates an array mapping the original color value to 
+	 * its new color value for histogram normalization
+	 * @param colArr The original color histogram array
+	 * @param totalPixels the total number of pixels in the image
+	 * @return The cumulative color array
+	 */
 	private int[] generateCumulative(int[] colArr, int totalPixels) {
 		int[] cumulativeValues = new int[colArr.length];
 		float total = 0;
 		for (int i = 0; i < colArr.length; i++) {
 			total += colArr[i];
 			cumulativeValues[i] =
-				Math.round(total / totalPixels * colArr.length);
+				Math.round(total / totalPixels * (colArr.length - 1));
 		}
 		return cumulativeValues;
 	}

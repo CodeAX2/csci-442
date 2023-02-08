@@ -32,17 +32,26 @@ public class MyPanel extends JPanel {
 		g2.drawImage(grid, null, 0, 0);
 	}
 
+	/**
+	 * Draws given histogram to the panel
+	 * @param color the color of the histogram
+	 * @param histogram the histogram data
+	 */
 	public void drawHistogram(Color color, int[] histogram) {
+
+		// Clear any existing drawings
 		gc.clearRect(0, 0, getWidth(), getHeight());
 		gc.setColor(color);
 
+		// Find the max value of the histogram
 		float maxValue = 0;
-
 		for (int i = 0; i < histogram.length; i++) {
 			if (histogram[i] > maxValue)
 				maxValue = histogram[i];
 		}
 
+		// Draw each line of the histogram, with the largest value
+		// being half the height of the panel
 		for (int i = 0; i < histogram.length; i++) {
 			gc.drawLine(
 				i,
@@ -51,5 +60,6 @@ public class MyPanel extends JPanel {
 				getHeight() - (int)(histogram[i] / maxValue * getHeight() / 2f)
 			);
 		}
+		this.repaint();
 	}
 }

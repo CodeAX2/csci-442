@@ -3,12 +3,16 @@ import numpy as np
 
 
 class ObjectTracker:
+    # Base Image
     __bgrImg: cv.Mat
+    # HSV Version
     __hsvImg: cv.Mat
+    # Threshold Version
     __thresholdImg: cv.Mat
 
     __capture: cv.VideoCapture
 
+    # Scalars from sliders
     __minScalar: np.array
     __maxScalar: np.array
 
@@ -94,19 +98,23 @@ class ObjectTracker:
 
     def startLoop(self) -> None:
         while True:
+            # Get Image
             _, self.__bgrImg = self.__capture.read()
 
+            # Create HSV and threshold
             self.__hsvImg = cv.cvtColor(self.__bgrImg, cv.COLOR_BGR2HSV)
             self.__thresholdImg = cv.inRange(
                 self.__hsvImg, self.__minScalar, self.__maxScalar
             )
 
+            # Perform dilation
             dilateElement = cv.getStructuringElement(
                 cv.MORPH_RECT,
                 (2 * self.__dilationSize + 1, 2 * self.__dilationSize + 1),
                 (self.__dilationSize, self.__dilationSize),
             )
 
+            # Perform erosion
             erodeElement = cv.getStructuringElement(
                 cv.MORPH_RECT,
                 (2 * self.__erosionSize + 1, 2 * self.__erosionSize + 1),
@@ -116,6 +124,7 @@ class ObjectTracker:
             self.__thresholdImg = cv.dilate(self.__thresholdImg, dilateElement)
             self.__thresholdImg = cv.erode(self.__thresholdImg, erodeElement)
 
+            # Show images
             cv.imshow("BGR", self.__bgrImg)
             cv.imshow("HSV", self.__hsvImg)
             cv.imshow("Threshold", self.__thresholdImg)
@@ -126,18 +135,21 @@ class ObjectTracker:
 
         cv.destroyAllWindows()
 
+    # Callback fn for clicking on HSV window
     def hsvCallback(self, event, x: int, y: int, flags, param) -> None:
         if event == cv.EVENT_LBUTTONDOWN:
             print(
                 "HSV at (" + str(x) + ", " + str(y) + "): " + str(self.__hsvImg[y][x])
             )
 
+    # Callback for clicking on base window
     def videoCallback(self, event, x: int, y: int, flags, param) -> None:
         if event == cv.EVENT_LBUTTONDOWN:
             print(
                 "BGR at (" + str(x) + ", " + str(y) + "): " + str(self.__bgrImg[y][x])
             )
 
+    # Callbacks for all sliders
     def trackbarChanged(self, value: int, trackbarName: str) -> None:
         # Update the corresponding element of the min/max scalar
         if trackbarName == "minH":
@@ -158,6 +170,7 @@ class ObjectTracker:
             self.__erosionSize = value
 
 
+# Create the program
 def main():
     tracker: ObjectTracker = ObjectTracker()
     tracker.startLoop()

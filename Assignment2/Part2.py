@@ -3,8 +3,10 @@ import numpy as np
 
 
 class MotionTracker:
+    # The base image
     __bgrImg: cv.Mat
 
+    # The various images used for motion capture
     __grayImg: cv.Mat
     __curDst: cv.Mat
     __capture1: cv.Mat
@@ -82,7 +84,7 @@ class MotionTracker:
             i = 0
             for contour in contours:
                 # Cutoff for small contours
-                if contour.size <= 100:
+                if contour.size <= 75:
                     i = i + 1
                     continue
                 # Draw contours of blobs (step 15)
@@ -106,7 +108,7 @@ class MotionTracker:
 
         cv.destroyAllWindows()
 
-
+# Create the program
 def main():
     tracker: MotionTracker = MotionTracker()
     tracker.startLoop()

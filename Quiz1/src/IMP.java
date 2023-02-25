@@ -216,16 +216,6 @@ class IMP implements MouseListener {
 		});
 		fun.add(prob2Item);
 
-		// Add problem1 button
-		JMenuItem prob3Item = new JMenuItem("Problem 3");
-		prob3Item.addActionListener(new ActionListener() {
-			@Override
-			public void actionPerformed(ActionEvent evt) {
-				problem3();
-			}
-		});
-		fun.add(prob3Item);
-
 		return fun;
 	}
 
@@ -680,21 +670,48 @@ class IMP implements MouseListener {
 	 * TODO: Complete problem 1
 	 */
 	private void problem1() {
-		System.out.println("Problem 1");
+		for (int row = 0; row < height; row++) {
+			for (int col = 0; col < width; col++) {
+				// Check if we are on the 4th column or row
+				if (row % 4 == 0 || col % 4 == 0)
+					// Make it black
+					picture[row][col] =
+						getPixels(new int[] {255, 0, 0, 0});
+			}
+		}
+		// Reset the picture to load from the picture array
+		resetPicture();
 	}
 
 	/**
 	 * TODO: Complete problem 2
 	 */
 	private void problem2() {
-		System.out.println("Problem 2");
-	}
+		// Convert to grayscale
+		makeGrayscale();
+		for (int row = 0; row < height; row++) {
+			for (int col = 0; col < width; col++) {
+				// Get ARGB array for current pixel
+				int[] argb = getPixelArray(picture[row][col]);
 
-	/**
-	 * TODO: Complete problem 3
-	 */
-	private void problem3() {
-		System.out.println("Problem 3");
+				// Only need to check red, since R=G=B when grayscale
+				if (argb[1] > 185) {
+					// Turn to white
+					argb[1] = 255;
+					argb[2] = 255;
+					argb[3] = 255;
+				} else {
+					// Turn to black
+					argb[1] = 0;
+					argb[2] = 0;
+					argb[3] = 0;
+				}
+				// Set pixel color
+				picture[row][col] = getPixels(argb);
+			}
+		}
+		// Reset the picture to load from the picture array
+		resetPicture();
 	}
 
 	private void quit() {

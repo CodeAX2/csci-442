@@ -69,7 +69,7 @@ try:
                 100
             )
 
-            # Allow user to select tracking region
+            # Uncomment below to allow user to select tracking region
             # bbox = cv2.selectROI("Select Tracking Box", color_image, True)
             # cv2.destroyWindow("Select Tracking Box")
 
